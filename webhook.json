@@ -1,0 +1,144 @@
+{
+  "name": "webhook",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "my chat app",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -160,
+        -16
+      ],
+      "id": "9adcdcd6-bd3b-4e1b-bff4-557e6fddbc21",
+      "name": "Webhook",
+      "webhookId": "e8b12c40-c1f3-4dbd-9924-5e6cba3a066e"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are an AI Study Assistant \n\nRole:\n- Help students understand study material\n- Answer questions clearly and simply\n- Act like a calm, helpful teacher\n\nInput you will receive (from n8n):\n- User message (text)\n- Uploaded file content (if available)\n- User question about the file or topic\n\nYour Tasks:\n1. If a file is provided:\n   - Read and understand the file content\n   - Answer ONLY using the file when possible\n2. If no file is provided:\n   - Answer like a normal AI chat assistant\n3. Keep explanations simple and easy for beginners\n4. Use short paragraphs and bullet points when helpful\n\nResponse Rules:\n- Do NOT use complex words\n- Do NOT add unnecessary information\n- Be clear and direct\n- If the question is unclear, ask one simple clarification\n\nOutput Format (IMPORTANT):\nReturn your response as plain text only.\nNo markdown.\nNo code blocks.\nNo emojis.\n\nGoal:\n- Help the student learn, not confuse them\n {{ $json.body.message }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        48,
+        -16
+      ],
+      "id": "625b1006-d312-420b-8a8f-09701a43da19",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -96,
+        192
+      ],
+      "id": "94de74b2-f5c4-4785-9af2-fca18025eda5",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "qSYR1nRpbwORuoQi",
+          "name": "Google Gemini(PaLM) Api account 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        400,
+        -16
+      ],
+      "id": "9575af27-1963-429f-9843-8d62a0b740b9",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.body.message }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        96,
+        272
+      ],
+      "id": "00fec967-dfee-4065-9e68-820700c811d1",
+      "name": "Simple Memory"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "017be013-ce23-49c3-b4a7-b9f2b2c6619b",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "69bd8892a959bbe57bc4a5116d21573e038f3a13580ef78a8144f04b436d3c10"
+  },
+  "id": "n2FCB3ZnzOv69ua1",
+  "tags": []
+}
