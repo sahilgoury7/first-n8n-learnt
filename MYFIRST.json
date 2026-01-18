@@ -1,0 +1,170 @@
+{
+  "name": "MYFIRST",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "demo",
+        "formDescription": "its is my  first demo project",
+        "formFields": {
+          "values": [
+            {
+              "fieldName": "name",
+              "fieldLabel": "what is your name ",
+              "requiredField": true
+            },
+            {
+              "fieldName": "email",
+              "fieldLabel": "what is your email",
+              "fieldType": "email",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.4,
+      "position": [
+        -32,
+        0
+      ],
+      "id": "19f72480-fb61-49bb-a778-a10cf90c1229",
+      "name": "On form submission",
+      "webhookId": "0f6bf407-48c8-4207-bcbc-bd8a90416d63"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "12ciY_XB5fbelP4PAhAHbsPXoLXb2KqDIWPntqwQ7Hc0",
+          "mode": "list",
+          "cachedResultName": "n8n demo sheets",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/12ciY_XB5fbelP4PAhAHbsPXoLXb2KqDIWPntqwQ7Hc0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/12ciY_XB5fbelP4PAhAHbsPXoLXb2KqDIWPntqwQ7Hc0/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "NAME": "={{ $json.name }}",
+            "EMAIL": "={{ $json.email }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "NAME",
+              "displayName": "NAME",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "EMAIL",
+              "displayName": "EMAIL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        288,
+        -16
+      ],
+      "id": "768692aa-cd2d-4e25-8956-7e44932cee6f",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "LPg5EKVq5nL3cbdj",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.EMAIL }}",
+        "subject": "Confirmation for sombition.",
+        "emailType": "text",
+        "message": "Your form is submitted.",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        608,
+        -16
+      ],
+      "id": "30fc1ac8-1227-4037-83c8-bad20abc8b9d",
+      "name": "Send a message",
+      "webhookId": "5e39ae8f-b9dd-4d82-b80e-e788a92390b0",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "aiz1PoEr5wXNFjip",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "Append row in sheet": [
+      {
+        "json": {
+          "NAME": "think",
+          "EMAIL": "thinkerytech@gmail.com"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "2595bc51-969f-42a1-b8e4-f58cc8cb1a68",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "69bd8892a959bbe57bc4a5116d21573e038f3a13580ef78a8144f04b436d3c10"
+  },
+  "id": "vzVm1mv1Ll1QqSkZ",
+  "tags": []
+}
