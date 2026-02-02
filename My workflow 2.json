@@ -1,0 +1,690 @@
+{
+  "name": "My workflow 2",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "demo",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "name"
+            },
+            {
+              "fieldLabel": "email",
+              "fieldType": "email"
+            },
+            {
+              "fieldLabel": "job role",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "editor"
+                  },
+                  {
+                    "option": "AI expert"
+                  },
+                  {
+                    "option": "ca"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.5,
+      "position": [
+        -16,
+        96
+      ],
+      "id": "71bc27cc-7cc2-4bc8-823d-8763aebd490d",
+      "name": "On form submission",
+      "webhookId": "0e17f26a-82b5-4623-9f4f-7ee5c293c6af"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -16,
+        720
+      ],
+      "id": "603bc63b-ca2d-4a6b-ad78-18cb494a7c55",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.fields['job role'] }}",
+                    "rightValue": "AI expert",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    },
+                    "id": "1aab274e-4147-489d-8aaa-321cdbb843a6"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "5d6bbb4f-459f-405e-b65e-83f6dda90641",
+                    "leftValue": "={{ $json.fields['job role'] }}",
+                    "rightValue": "editor",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "e6ef8f24-bfe3-4e61-865d-9abee7641b9e",
+                    "leftValue": "ca",
+                    "rightValue": "={{ $json.fields['job role'] }}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        432,
+        80
+      ],
+      "id": "ebee2f55-f4ca-4e1c-ae43-852b5bc46fd6",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        320
+      ],
+      "id": "fee25c0c-8ee0-430d-b96c-2464f3712251",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "QwbB4n2tugy8YamR",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "appQthuzrikT1qx9d",
+          "mode": "list",
+          "cachedResultName": "from sub",
+          "cachedResultUrl": "https://airtable.com/appQthuzrikT1qx9d"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblQUTbUvJHTF5vy0",
+          "mode": "list",
+          "cachedResultName": "Table 1",
+          "cachedResultUrl": "https://airtable.com/appQthuzrikT1qx9d/tblQUTbUvJHTF5vy0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{ $json.name }}",
+            "job role": "={{ $json['job role'] }}",
+            "Email": "={{ $json.email }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "job role",
+              "displayName": "job role",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "editor",
+                  "value": "editor"
+                },
+                {
+                  "name": "AI expert",
+                  "value": "AI expert"
+                },
+                {
+                  "name": "ca",
+                  "value": "ca"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        208,
+        96
+      ],
+      "id": "ec13641d-eb0f-440d-ac6b-6f2172c12fa5",
+      "name": "Create a record",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "AonmmXsNICyYhuTi",
+          "name": "Airtable Personal Access Token account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "appQthuzrikT1qx9d",
+          "mode": "list",
+          "cachedResultName": "from sub",
+          "cachedResultUrl": "https://airtable.com/appQthuzrikT1qx9d"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblQUTbUvJHTF5vy0",
+          "mode": "list",
+          "cachedResultName": "Table 1",
+          "cachedResultUrl": "https://airtable.com/appQthuzrikT1qx9d/tblQUTbUvJHTF5vy0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "job role",
+              "displayName": "job role",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "editor",
+                  "value": "editor"
+                },
+                {
+                  "name": "AI expert",
+                  "value": "AI expert"
+                },
+                {
+                  "name": "ca",
+                  "value": "ca"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        656,
+        96
+      ],
+      "id": "754d8c3d-c7d7-4687-8531-faa2e3045c13",
+      "name": "editor",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "AonmmXsNICyYhuTi",
+          "name": "Airtable Personal Access Token account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "appQthuzrikT1qx9d",
+          "mode": "list",
+          "cachedResultName": "from sub",
+          "cachedResultUrl": "https://airtable.com/appQthuzrikT1qx9d"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblQUTbUvJHTF5vy0",
+          "mode": "list",
+          "cachedResultName": "Table 1",
+          "cachedResultUrl": "https://airtable.com/appQthuzrikT1qx9d/tblQUTbUvJHTF5vy0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "job role",
+              "displayName": "job role",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "editor",
+                  "value": "editor"
+                },
+                {
+                  "name": "AI expert",
+                  "value": "AI expert"
+                },
+                {
+                  "name": "ca",
+                  "value": "ca"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        656,
+        288
+      ],
+      "id": "e74ad8f8-e373-4c75-b37d-10d3fe40c40b",
+      "name": "ca",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "AonmmXsNICyYhuTi",
+          "name": "Airtable Personal Access Token account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "appQthuzrikT1qx9d",
+          "mode": "list",
+          "cachedResultName": "from sub",
+          "cachedResultUrl": "https://airtable.com/appQthuzrikT1qx9d"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblQUTbUvJHTF5vy0",
+          "mode": "list",
+          "cachedResultName": "Table 1",
+          "cachedResultUrl": "https://airtable.com/appQthuzrikT1qx9d/tblQUTbUvJHTF5vy0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "job role": "AI expert",
+            "Email": "={{ $('On form submission').item.json.email }}",
+            "Name": "={{ $('Create a record').item.json.fields.Name }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "job role",
+              "displayName": "job role",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "editor",
+                  "value": "editor"
+                },
+                {
+                  "name": "AI expert",
+                  "value": "AI expert"
+                },
+                {
+                  "name": "ca",
+                  "value": "ca"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        656,
+        -96
+      ],
+      "id": "5c1a9588-2a29-4c08-b03d-5e20faaf2189",
+      "name": "AI expert",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "AonmmXsNICyYhuTi",
+          "name": "Airtable Personal Access Token account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=<prompt>\n    <role>Human Developer</role>\n    <task>Write a short 3-sentence email for a job role.</task>\n    <constraints>\n        <constraint>Maximum 50 words</constraint>\n        <constraint>No corporate jargon or formal greetings</constraint>\n        <constraint>Mention n8n and AI agent experience</constraint>\n    </constraints>\n    <template>\n        Hi {{name}}, I saw you are looking for a {{role}}. I recently built an AI agent using n8n that automates {{skill}}. Would this be useful for the team at {{company}}? Let me know.\n    </template>\n</prompt>"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        1120,
+        32
+      ],
+      "id": "93317850-487f-4d14-9304-08bfad1f42a0",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1472,
+        32
+      ],
+      "id": "d51a9c3c-32a4-4fef-99bd-2e5f0b640a60",
+      "name": "Send a message",
+      "webhookId": "ce38a511-f277-4183-af05-154cbab4406f",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "NUo5RCAv5EKzhlg5",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Create a record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        []
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a record": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "AI expert",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "editor",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "ca",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI expert": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "editor": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ca": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "d8d11c84-bedc-452a-a0a2-5a5d7a11949c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "e9fdfedc6a51207d56c3300288a41b28ce0fa71ce1994e8b9794751f4d04bbfe"
+  },
+  "id": "6pvyqEBI-adeJpgO0kDqH",
+  "tags": []
+}
